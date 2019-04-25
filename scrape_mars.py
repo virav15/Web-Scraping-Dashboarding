@@ -10,19 +10,36 @@ def init_browser():
     executable_path = {"executable_path":"c:\drivers\chromedriver"}
     return Browser("chrome", **executable_path, headless = False)
 
+# Create Mission to Mars global dictionary
+mars_info = {}
+
 def scrape():
-    browser = init_browser()
-    mars_facts_data = {}
+    try: 
 
-    nasa = "https://mars.nasa.gov/news/"
-    browser.visit(nasa)
-    time.sleep(2)
+        # Initialize browser 
+        browser = init_browser()
 
-    html = browser.html
-    soup = bs(html,"html.parser")
+        # Visit Nasa news url through splinter module
+        url = 'https://mars.nasa.gov/news/'
+        browser.visit(url)
 
-    #scrapping latest news about mars from nasa
-    news_title = soup.find("div",class_="content_title").text
-    news_p = soup.find("div", class_="article_teaser_body").text
-    mars_facts_data['news_title'] = news_title
-    mars_facts_data['news_p'] = news_p
+        # HTML Object
+        html = browser.html
+
+        # Parse HTML with Beautiful Soup
+        soup = bs(html, 'html.parser')
+
+
+        # Retrieve the latest element that contains news title and news_paragraph
+        news_title = soup.find('div', class_='content_title').find('a').text
+        news_p = soup.find('div', class_='article_teaser_body').text
+
+        # Dictionary entry from MARS NEWS
+        mars_info['news_title'] = news_title
+        mars_info['news_paragraph'] = news_p
+
+        return mars_info
+
+    finally:
+
+        browser.quit()
