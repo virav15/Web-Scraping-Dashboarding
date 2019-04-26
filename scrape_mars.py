@@ -124,3 +124,5 @@ def scrape_mars_weather():
     finally:
 
         browser.quit()
+
+    
