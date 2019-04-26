@@ -13,11 +13,14 @@ def init_browser():
 # Create Mission to Mars global dictionary
 mars_info = {}
 
-def scrape():
+# NASA MARS NEWS
+def scrape_mars_news():
     try: 
 
         # Initialize browser 
         browser = init_browser()
+
+        #browser.is_element_present_by_css("div.content_title", wait_time=1)
 
         # Visit Nasa news url through splinter module
         url = 'https://mars.nasa.gov/news/'
@@ -44,12 +47,13 @@ def scrape():
 
         browser.quit()
 
+
     # FEATURED IMAGE
 def scrape_mars_image():
 
-    try: 
+    try:
 
-        # Initialize browser 
+        # Initialize browser
         browser = init_browser()
 
         #browser.is_element_present_by_css("img.jpg", wait_time=1)
