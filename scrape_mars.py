@@ -83,3 +83,44 @@ def scrape_mars_image():
     finally:
 
         browser.quit()
+
+        # Mars Weather
+def scrape_mars_weather():
+
+    try: 
+
+        # Initialize browser 
+        browser = init_browser()
+
+        #browser.is_element_present_by_css("div", wait_time=1)
+
+        # Visit Mars Weather Twitter through splinter module
+        weather_url = 'https://twitter.com/marswxreport?lang=en'
+        browser.visit(weather_url)
+
+        # HTML Object 
+        html_weather = browser.html
+
+        # Parse HTML with Beautiful Soup
+        soup = bs(html_weather, 'html.parser')
+
+        # Find all elements that contain tweets
+        latest_tweets = soup.find_all('div', class_='js-tweet-text-container')
+
+        # Retrieve all elements that contain news title in the specified range
+        # Look for entries that display weather related words to exclude non weather related tweets 
+        for tweet in latest_tweets: 
+            weather_tweet = tweet.find('p').text
+            if 'Sol' and 'pressure' in weather_tweet:
+                print(weather_tweet)
+                break
+            else: 
+                pass
+
+        # Dictionary entry from WEATHER TWEET
+        mars_info['weather_tweet'] = weather_tweet
+        
+        return mars_info
+    finally:
+
+        browser.quit()
