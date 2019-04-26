@@ -151,3 +151,64 @@ def scrape_mars_facts():
 
     return mars_info
 
+    # MARS HEMISPHERES
+
+
+def scrape_mars_hemispheres():
+
+    try: 
+
+        # Initialize browser 
+        browser = init_browser()
+
+        # Visit hemispheres website through splinter module 
+        hemispheres_url = 'https://astrogeology.usgs.gov/search/results?q=hemisphere+enhanced&k1=target&v1=Mars'
+        browser.visit(hemispheres_url)
+
+        # HTML Object
+        html_hemispheres = browser.html
+
+        # Parse HTML with Beautiful Soup
+        soup = bs(html_hemispheres, 'html.parser')
+
+        # Retreive all items that contain mars hemispheres information
+        items = soup.find_all('div', class_='item')
+
+        # Create empty list for hemisphere urls
+        hiu = []
+
+        # Store the main_ul 
+        hemispheres_main_url = 'https://astrogeology.usgs.gov' 
+
+        # Loop through the items previously stored
+        for i in items: 
+            # Store title
+            title = i.find('h3').text
+            
+            # Store link that leads to full image website
+            partial_img_url = i.find('a', class_='itemLink product-item')['href']
+            
+            # Visit the link that contains the full image website 
+            browser.visit(hemispheres_main_url + partial_img_url)
+            
+            # HTML Object of individual hemisphere information website 
+            partial_img_html = browser.html
+            
+            # Parse HTML with Beautiful Soup for every individual hemisphere information website 
+            soup = bs( partial_img_html, 'html.parser')
+            
+            # Retrieve full image source 
+            img_url = hemispheres_main_url + soup.find('img', class_='wide-image')['src']
+            
+            # Append the retreived information into a list of dictionaries 
+            hiu.append({"title" : title, "img_url" : img_url})
+
+        mars_info['hiu'] = hiu
+
+        
+        # Return mars_data dictionary 
+
+        return mars_info
+    finally:
+
+        browser.quit()
