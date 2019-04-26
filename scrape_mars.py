@@ -125,4 +125,29 @@ def scrape_mars_weather():
 
         browser.quit()
 
-    
+    # Mars Facts
+def scrape_mars_facts():
+
+    # Visit Mars facts url 
+    facts_url = 'http://space-facts.com/mars/'
+
+    # Use Panda's `read_html` to parse the url
+    mars_facts = pd.read_html(facts_url)
+
+    # Find the mars facts DataFrame in the list of DataFrames as assign it to `mars_df`
+    mars_df = mars_facts[0]
+
+    # Assign the columns `['Description', 'Value']`
+    mars_df.columns = ['Description','Value']
+
+    # Set the index to the `Description` column without row indexing
+    mars_df.set_index('Description', inplace=True)
+
+    # Save html code to folder Assets
+    data = mars_df.to_html()
+
+    # Dictionary entry from MARS FACTS
+    mars_info['mars_facts'] = data
+
+    return mars_info
+
